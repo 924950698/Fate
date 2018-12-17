@@ -250,6 +250,7 @@ export default {
               <p class="hero-info">{{hero.cardid}}</p>
               {{hero.name}}<br/>
               <!-- <br/> -->
+              
               <p class="hero-info">{{hero.dep}}</p>
             </div>
           </li>
