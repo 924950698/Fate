@@ -1,0 +1,40 @@
+开始之前：
+
+0. 安装node(v6.3.0)或以上：https://nodejs.org/en/
+
+开始执行：
+
+1. 当前output文件夹下 shift+右键 打开 在此处打开命令窗口
+2. 输入 "node app.js"或者 "pm2 start app.js"（可选，推荐，但需要先安装pm2: 命令窗口执行：npm install -g ）
+3. 打开谷歌浏览器，输入网址：127.0.0.1:8081，然后按F12。
+4. 每次开启整个抽奖之前，需要控制台resetAll()并F5刷新页面
+5. 一组完整的抽奖操作：start(number)→end()→ {start(num)→end()→ ...}→winners()
+
+
+控制台指令：
+
+1. start(number)：开始抽奖number人
+2. end(): 停止抽奖
+3. winners(): 汇总上次执行winners到目前为止的几次end的获奖名单，显示在屏幕上
+4. resetAll(): 重置511人数据，只在晚会开启前执行（之后不可执行）
+
+
+
+5. 查看中奖名单：server/log下文件
+6. 为保证显示效果，建议同屏最多24人，超出部分可能会产生滚动条
+7. 抽奖过程中，可以重启和刷新页面，但需要保证data文件夹内容不被手动更改或删除
+
+需要替换头图：src/assets/img/title.png
+
+
+PS1：
+
+1. 使用node app.js 用Ctrl+C停止进程
+2. 如果使用了pm2 start app.js。查看实时记录"pm2 logs app.js", 停止需要执行pm2 kill。
+
+PS2：
+由于年会定制需求，抽奖分为组-批次，比如三等奖一组24人，要分三批抽，连续执行三次start(8)→end()后执行winners()将24人汇总到屏幕上。
+如果需要使用此需求，并且有一组只有一批，请记得在end()后执行winners()后再去执行下一组start(num)；
+如果没有此需求，只需要连续start(num)→end()即可
+
+更多介绍见README.md 或 http://xiaolvyun.baidu.com/waimai/icode/repo/waimai%2Flupeipeng_iwm%2Ffate/files/master/tree/

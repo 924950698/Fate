@@ -1,0 +1,160 @@
+#app {
+/*  font-family: 'Avenir', Helvetica, Arial, sans-serif;*/
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  /*background-color: pink;*/
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  height: 100%;
+  background: url('/src/assets/img/beijing.png') no-repeat;
+  background-size: 100% 100%;
+}
+.employee-list .hero-info{
+  font-size: 0.6em;
+  line-height: 1.3em;
+  max-width: 80%;
+  margin: 0.5em auto;
+}
+h1, h2 {
+  font-weight: normal;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 5%;
+  width: 80%;
+  /*display: inline-flex;*/
+}
+
+li {
+  display: inline-block;
+  margin-bottom: 0.2em;
+  font-size: 1.2em;
+  width: 50%;
+}
+li .name-normal{
+  background: url('/src/assets/img/name.png') no-repeat;
+  background-size: 90% 100%;
+  background-position-x: 50%;
+  width: 100%;
+  height: 6.6em;
+  word-break: break-all;
+  float: left;
+  margin-left: 3em;
+  padding-top: 0.6em;
+}
+a {
+  color: #42b983;
+}
+.logo{
+  height: 20%;
+}
+.header{
+  height: 30%;
+
+}
+.title-pic-wrapper {
+    display: flex;
+    position: absolute;
+    top: 18em;
+    width: 100%;
+    height: 40%;
+    justify-content: center;
+}
+.handleToDown {
+  position: absolute;
+  bottom: 0;
+  right: 0; 
+  font-size: 9px;
+  color: red;
+}
+.title-pic{
+  background: url('/src/assets/img/title.png') no-repeat;
+  background-size: 100%;
+  /* background-position-y: 55%; */
+  width: 31%;
+  height: 100%;
+  /* animation: mymove 5s infinite; */
+}
+.title{
+  height: 10%;
+}
+.content{
+  height: 70%;
+  width: 90%;
+  /*background-color: #fff;*/
+  margin: 0 auto;
+  /*overflow: hidden;*/
+  color: #fff;
+  position: relative;
+  max-width: 80%;
+  overflow: auto;
+}
+.content .mask{
+  background: gray;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
+.content .singlerow{
+  margin-top: 7%;
+  font-size: 2em;
+}
+.content .name-normal{
+  padding-top: 1em;
+}
+.content  .doublerow {
+  font-size: 1.8em;
+  margin-bottom: 1.8em;
+}
+.action{
+  height: 15%;
+  padding-top: 30px;
+
+}
+.action input{
+  width: 100px;
+  display: inline-block;
+}
+
+.action button{
+  margin-left: 10px;
+}
+.move-enter-active {
+  animation: bounce-in .5s;
+}
+.move-leave-active {
+  animation: bounce-out .5s;
+}
+@keyframes move-in {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(1.5);
+  }
+  100% {
+    transform: translateY(1);
+  }
+}
+@keyframes move-out {
+  0% {
+    transform: translateY(1);
+  }
+  50% {
+    transform: translateY(1.5);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+@keyframes mymove {
+  from {top:0em;}
+  to {top:-12em;}
+}
