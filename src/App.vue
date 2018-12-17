@@ -210,6 +210,7 @@ export default {
         },
         
         handleToDown() { //制作excel表格，需手动设置边框线以及微调样式
+        console.log('--git stash123--')
           let jsonData = this.cacheNameList //先获取当前的中奖数据
           console.log(jsonData, '开始下载文件')
           let [str, title] = [jsonData.length + '人中奖名单', jsonData.length + '人中奖名单'];
@@ -250,7 +251,7 @@ export default {
               <p class="hero-info">{{hero.cardid}}</p>
               {{hero.name}}<br/>
               <!-- <br/> -->
-              
+
               <p class="hero-info">{{hero.dep}}</p>
             </div>
           </li>
