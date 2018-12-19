@@ -68,7 +68,9 @@ export default {
     mounted() {
         this.$nextTick(() => {
             $.ajax({
-                url: `${IP}/getAllHeros`
+              url: `${IP}/getAllHeros`,
+              // Origin: 'http://127.0.0.1:8081',
+              // headers:{ "Access-Control-Allow-Origin":"*"},
             }).done((res) => {
               console.log(res, '--res123--')
                 this.newHerosList = res.data
@@ -152,15 +154,18 @@ export default {
                     if(+rs.errno === 0) {
                         clearInterval(this.beginPolling)
                         this.beginPolling = null
-
                         this.heroRoll = rs.data.calledHeros || []
                         this.newHerosList = rs.data.newHerosList || []
                         this.cacheNameList.push(...this.heroRoll)
 
+                        //每次中奖人名单，存入localstrage里
+                        let dataHero = JSON.stringify(this.cacheNameList)
+                        window.localStorage.dataHero = dataHero
+                        console.log(JSON.stringify(dataHero), '--获取localhosts--')
+
                         this.servant++
                         console.info(`${this.status}-已存中奖数：${this.cacheNameList.length}-下次批次：${this.master}-${this.servant}- 剩余人数:${this.newHerosList.length}%c%s`,"color: red;background: yellow;font-size: 20px"
                         , '下一次操作是：winners 或者 start')
-
                         if(this.cacheNameList.length > 24) {
                             console.warn(`${this.status}-已存中奖数：${this.cacheNameList.length}-下次批次：${this.master}-${this.servant}%c%s`,"color: red;background: yellow;font-size: 20px",
                                 '库存人数超过24了！')
@@ -196,56 +201,61 @@ export default {
                 console.error(`${this.status}-已存中奖数：${this.cacheNameList.length}`, '必须先结束！')
                 return;
             }
-
             this.master++
             this.servant = 1
             this.heroRoll = this.cacheNameList;
             this.cacheNameList = [];
             this.status = 'showAlled'
-           
             this.arrList.push(this.heroRoll)
             console.log(this.arrList, '--this.arrList--')
             console.info(`${this.status}-已存中奖数：${this.cacheNameList.length}-下次批次：${this.master}-start%c%s`,"color: red;background: yellow;font-size: 20px",
              '下一次操作是：start')
         },
         
-        handleToDown() { //制作excel表格，需手动设置边框线以及微调样式
-          let jsonData = this.cacheNameList //先获取当前的中奖数据
-          console.log(jsonData, '开始下载文件')
-          let [str, title] = [jsonData.length + '人中奖名单', jsonData.length + '人中奖名单'];
-          // title = jsonData.length + '人中奖名单';
-          console.log(str)
-          //增加\t为了不让表格显示科学计数法或者其他格式
-          for(let i = 0 ; i < jsonData.length ; i++ ){
-            for(let item in jsonData[i]){
-                str+=`${jsonData[i][item] + '\t'},`; 
-            }
-            str+='\n';
-          }
-          //encodeURIComponent解决中文乱码
-          let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
-          //通过创建a标签实现
-          var link = document.createElement("a");
-          link.href = uri;
-          //对下载的文件命名
-          link.download = title;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+        handleToDown(heroData) { //制作excel表格，需手动设置边框线以及微调样式
+          // console.log(JSON.stringify(heroData), '--获取localhosts--')
+          // let dataHero = JSON.stringify(heroData)
+          // window.localStorage.dataHero = dataHero
+
+
+          // let jsonData = this.cacheNameList //先获取当前的中奖数据
+          // console.log(jsonData, '开始下载文件')
+          // let [str, title] = [jsonData.length + '人中奖名单', jsonData.length + '人中奖名单'];
+          // // title = jsonData.length + '人中奖名单';
+          // console.log(str)
+          // //增加\t为了不让表格显示科学计数法或者其他格式
+          // for(let i = 0 ; i < jsonData.length ; i++ ){
+          //   for(let item in jsonData[i]){
+          //       str+=`${jsonData[i][item] + '\t'},`; 
+          //   }
+          //   str+='\n';
+          // }
+          // //encodeURIComponent解决中文乱码
+          // let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
+          // //通过创建a标签实现
+          // var link = document.createElement("a");
+          // link.href = uri;
+          // //对下载的文件命名
+          // link.download = title;
+          // document.body.appendChild(link);
+          // link.click();
+          // document.body.removeChild(link);
         },
     }
 }
 </script>
 
 <template>
+ <!-- <main-layout> -->
+   
   <div id="app">
     <div class="header">
-      
     </div>
     <div class="content">
       <div :style="{marginTop: ratial}">
         <ul class="employee-list">
-          <li v-for="hero in heroRoll" :style="{width: widthSize+'%'}" :class="{singlerow: singleRow, doublerow: doubleRow}">
+          <!-- <li v-for="hero in heroRoll" :style="{width: widthSize+'%'}" :class="{singlerow: singleRow, doublerow: doubleRow}"> -->
+          <li v-for="hero in heroRoll" :style="{width: 20+'%'}" :class="{singlerow: singleRow, doublerow: doubleRow}">
             <div class="name-normal">
               <p class="hero-info">{{hero.cardid}}</p>
               {{hero.name}}<br/>
@@ -260,9 +270,9 @@ export default {
     <div ref="titlePic" class="title-pic-wrapper">
       <div class="title-pic" @click="showContent"></div>
     </div>
-    <div class="handleToDown">
+    <!-- <div class="handleToDown">
       <span @click="handleToDown" >导出名单</span>
-    </div>
+    </div> -->
     <audio loop="loop" ref="rollAudio">
       <source src="./src/assets/audio/drum.mp3" type="audio/mpeg" />
     </audio>
@@ -270,6 +280,8 @@ export default {
       <source src="./src/assets/audio/goal.mp3" type="audio/mpeg" />
     </audio>
   </div>
+  <!-- </main-layout> -->
+
 </template>
 
 <style>

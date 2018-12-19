@@ -109,7 +109,7 @@ let rollMyHeros = (req, res) => {
                     }
                 })
             }
-            logArray('./server/log/add.txt', heroArrayList, ['master','servant', 'name', 'cardid'], 'newHero')
+            logArray('./server/log/add.txt', heroArrayList, ['master','servant', 'name','dep', 'cardid'], 'newHero')
             res.json({
                 errno: 0,
                 status: 'success',
