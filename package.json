@@ -5,13 +5,16 @@
   "author": "lupeipeng <lupeipeng@iwaimai.baidu.com>, chengyajie",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --inline --hot --port 8081",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --inline --hot ",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "server": "npm run build && node app.js",
+    "server": "npm run build && node app.js ",
+    "start": "concurrently \"npm run dev\" \"node app.js\"",
     "dist": "bash build.sh"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
+    "bson": "^4.0.1",
+    "concurrently": "^4.1.0",
     "cors": "^2.7.1",
     "express": "~4.9.0",
     "mongoose": "3.8.20",

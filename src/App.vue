@@ -14,6 +14,9 @@ export default {
           master: 1, // 当前第几组（仅用于记录用）
           servant: 1, // 当前该组第几批（仅用于记录用）
           cacheNameList: [],//累加中奖名单
+
+          cacheNameArr: [],//去重人的名字数组
+
           beginPolling: null, //名单滚动回调
           heroNumber: 1, // 抽奖请求参数
           isLogoTop: false,
@@ -27,7 +30,13 @@ export default {
 
           token: '2017',
 
-          status: 'init' // init, started, stoped, showAlled
+          status: 'init', // init, started, stoped, showAlled
+
+          //部门抽奖项目 
+          depList: [{"cardid":"","name":"爱学习在线中心","dep":""},{"cardid":"","name":"爱学习咨询中心","dep":""},{"cardid":"","name":"爱学习双师中心","dep":""},{"cardid":"","name":"爱学习学科中心","dep":""},{"cardid":"","name":"爱学习技术中心","dep":""},{"cardid":"","name":"爱学习产品中心","dep":""},{"cardid":"","name":"爱学习运营中心","dep":""},{"cardid":"","name":"爱学习商业分析部","dep":""},{"cardid":"","name":"爱学习企管部","dep":""},{"cardid":"","name":"集团产品中心","dep":""},{"cardid":"","name":"集团技术中心","dep":""}],
+          //部门员工抽奖
+          aixuexi_teachList: [] //双师
+
         }
     },
     watch:{
@@ -69,12 +78,12 @@ export default {
         this.$nextTick(() => {
             $.ajax({
               url: `${IP}/getAllHeros`,
-              // Origin: 'http://127.0.0.1:8081',
-              // headers:{ "Access-Control-Allow-Origin":"*"},
             }).done((res) => {
               console.log(res, '--res123--')
-                this.newHerosList = res.data
-                console.info(`%c已存中奖数：${this.cacheNameList.length}-初始库存：%s`,"color: red;background: yellow;font-size: 20px",
+              this.newHerosList = res.data
+              //遍历:剩下的所有员工，按照部门dep分成不同的数组
+              this.traverseNewHeroList(this.newHerosList)
+              console.info(`%c已存中奖数：${this.cacheNameList.length}-初始库存：%s`,"color: red;background: yellow;font-size: 20px",
                     `${this.newHerosList.length}`)
             }).fail((err) => {
                 console.error('--getAllHeros--', err)
@@ -115,8 +124,15 @@ export default {
             this.$refs.rollAudio.play();
             // 执行变化动画
             this.beginPolling = setInterval( () => {
-              let result = MagicCircle.call(this.newHerosList, num)
-              this.heroRoll = result.calledHeros
+            /*
+
+              this.newHerosList 所有人数组
+              this.depList 抽的部门数组
+              this.aixuexi_teachList 部门员工数组
+              
+            */
+            let result = MagicCircle.call(this.newHerosList, num)
+            this.heroRoll = result.calledHeros
             }, 100)
 
             $.ajax({
@@ -124,9 +140,7 @@ export default {
             }).done((rs) => {
                 if(+rs.errno === 0) {
                     this.token = rs.data
-
                     this.status = 'started'
-
                     console.info(`${this.status}-已存中奖数：${this.cacheNameList.length}-当前批次：${this.master}-${this.servant}%c%s`,"color: red;background: yellow;font-size: 20px",
                         '下一次操作是：end')
                 } else {
@@ -151,18 +165,28 @@ export default {
                         num: num
                     }
                 }).done((rs) => {
+                  console.log(rs, '--rs--')
                     if(+rs.errno === 0) {
                         clearInterval(this.beginPolling)
                         this.beginPolling = null
-                        this.heroRoll = rs.data.calledHeros || []
+                        /*
+                          显示所有人抽奖
+                        */
+
+                        this.heroRoll = rs.data.calledHeros || []//所有人
+
+                        /*
+                          部门抽奖
+                        */
+                        // this.heroRoll =this.heroRoll //部门 或 部门员工
+
                         this.newHerosList = rs.data.newHerosList || []
+                        console.log(this.heroRoll, '--this.heroRoll---')
                         this.cacheNameList.push(...this.heroRoll)
-
-                        //每次中奖人名单，存入localstrage里
-                        let dataHero = JSON.stringify(this.cacheNameList)
+                        let dataHero = JSON.stringify(this.cacheNameList)//每次中奖人名单，存入localstrage里
                         window.localStorage.dataHero = dataHero
-                        console.log(JSON.stringify(dataHero), '--获取localhosts--')
-
+                        // //调用去重方法
+                        // this.getHreoListName(this.cacheNameList)
                         this.servant++
                         console.info(`${this.status}-已存中奖数：${this.cacheNameList.length}-下次批次：${this.master}-${this.servant}- 剩余人数:${this.newHerosList.length}%c%s`,"color: red;background: yellow;font-size: 20px"
                         , '下一次操作是：winners 或者 start')
@@ -170,11 +194,9 @@ export default {
                             console.warn(`${this.status}-已存中奖数：${this.cacheNameList.length}-下次批次：${this.master}-${this.servant}%c%s`,"color: red;background: yellow;font-size: 20px",
                                 '库存人数超过24了！')
                         }
-
                     } else {
                         console.warn('rollMyHeros', rs.status)
                     }
-
                 }).fail((err) => {
                     console.warn('rollMyHeros', err)
                 })
@@ -211,36 +233,16 @@ export default {
             console.info(`${this.status}-已存中奖数：${this.cacheNameList.length}-下次批次：${this.master}-start%c%s`,"color: red;background: yellow;font-size: 20px",
              '下一次操作是：start')
         },
-        
-        handleToDown(heroData) { //制作excel表格，需手动设置边框线以及微调样式
-          // console.log(JSON.stringify(heroData), '--获取localhosts--')
-          // let dataHero = JSON.stringify(heroData)
-          // window.localStorage.dataHero = dataHero
 
-
-          // let jsonData = this.cacheNameList //先获取当前的中奖数据
-          // console.log(jsonData, '开始下载文件')
-          // let [str, title] = [jsonData.length + '人中奖名单', jsonData.length + '人中奖名单'];
-          // // title = jsonData.length + '人中奖名单';
-          // console.log(str)
-          // //增加\t为了不让表格显示科学计数法或者其他格式
-          // for(let i = 0 ; i < jsonData.length ; i++ ){
-          //   for(let item in jsonData[i]){
-          //       str+=`${jsonData[i][item] + '\t'},`; 
-          //   }
-          //   str+='\n';
-          // }
-          // //encodeURIComponent解决中文乱码
-          // let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
-          // //通过创建a标签实现
-          // var link = document.createElement("a");
-          // link.href = uri;
-          // //对下载的文件命名
-          // link.download = title;
-          // document.body.appendChild(link);
-          // link.click();
-          // document.body.removeChild(link);
-        },
+        //遍历剩下数组中的所有数据
+        traverseNewHeroList(newList) {
+          for(let i of newList) {
+            if(i.dep === '爱学习产品部') {
+              this.aixuexi_teachList.push(i)
+            }
+          }
+          console.log(this.aixuexi_teachList, '--this.aixuexi_teachList--')
+        }
     }
 }
 </script>

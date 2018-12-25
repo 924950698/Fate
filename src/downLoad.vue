@@ -30,6 +30,7 @@ import MagicCircle from './magic-circle.js'
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        window.localStorage.clear();
       }
     }
   }
