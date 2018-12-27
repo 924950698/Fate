@@ -33,7 +33,8 @@ export default {
           status: 'init', // init, started, stoped, showAlled
 
           //部门抽奖项目 
-          depList: [{"cardid":"","name":"爱学习在线中心","dep":""},{"cardid":"","name":"爱学习咨询中心","dep":""},{"cardid":"","name":"爱学习双师中心","dep":""},{"cardid":"","name":"爱学习学科中心","dep":""},{"cardid":"","name":"爱学习技术中心","dep":""},{"cardid":"","name":"爱学习产品中心","dep":""},{"cardid":"","name":"爱学习运营中心","dep":""},{"cardid":"","name":"爱学习商业分析部","dep":""},{"cardid":"","name":"爱学习企管部","dep":""},{"cardid":"","name":"集团产品中心","dep":""},{"cardid":"","name":"集团技术中心","dep":""}],
+          // depList: [{"cardid":"","name":"爱学习在线中心","dep":""},{"cardid":"","name":"爱学习咨询中心","dep":""},{"cardid":"","name":"爱学习双师中心","dep":""},{"cardid":"","name":"爱学习学科中心","dep":""},{"cardid":"","name":"爱学习技术中心","dep":""},{"cardid":"","name":"爱学习产品中心","dep":""},{"cardid":"","name":"爱学习运营中心","dep":""},{"cardid":"","name":"爱学习商业分析部","dep":""},{"cardid":"","name":"爱学习企管部","dep":""},{"cardid":"","name":"集团产品中心","dep":""},{"cardid":"","name":"集团技术中心","dep":""}],
+          depList: [{"cardid":"","name":"","dep":"爱学习在线中心"},{"cardid":"","name":"","dep":"爱学习咨询中心"},{"cardid":"","name":"","dep":"爱学习双师中心"},{"cardid":"","name":"","dep":"爱学习学科中心"},{"cardid":"","name":"","dep":"爱学习技术中心"},{"cardid":"","name":"","dep":"爱学习产品中心"},{"cardid":"","name":"","dep":"爱学习运营中心"},{"cardid":"","name":"","dep":"爱学习商业分析部"},{"cardid":"","name":"","dep":"爱学习企管部"},{"cardid":"","name":"","dep":"集团产品中心"},{"cardid":"","name":"","dep":"集团技术中心"}],
           //部门员工抽奖
           aixuexi_teachList: [] //双师
 
@@ -125,13 +126,11 @@ export default {
             // 执行变化动画
             this.beginPolling = setInterval( () => {
             /*
-
               this.newHerosList 所有人数组
               this.depList 抽的部门数组
               this.aixuexi_teachList 部门员工数组
-              
             */
-            let result = MagicCircle.call(this.newHerosList, num)
+            let result = MagicCircle.call(this.aixuexi_teachList, num)
             this.heroRoll = result.calledHeros
             }, 100)
 
@@ -173,12 +172,12 @@ export default {
                           显示所有人抽奖
                         */
 
-                        this.heroRoll = rs.data.calledHeros || []//所有人
+                        // this.heroRoll = rs.data.calledHeros || []//所有人
 
                         /*
                           部门抽奖
                         */
-                        // this.heroRoll =this.heroRoll //部门 或 部门员工
+                        this.heroRoll =this.heroRoll //部门 或 部门员工
 
                         this.newHerosList = rs.data.newHerosList || []
                         console.log(this.heroRoll, '--this.heroRoll---')
@@ -237,7 +236,7 @@ export default {
         //遍历剩下数组中的所有数据
         traverseNewHeroList(newList) {
           for(let i of newList) {
-            if(i.dep === '爱学习产品部') {
+            if(i.dep === '爱学习技术中心') {
               this.aixuexi_teachList.push(i)
             }
           }

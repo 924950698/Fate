@@ -6,9 +6,9 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --inline --hot ",
+    "start": "concurrently \"npm run dev\" \"node app.js\"",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "server": "npm run build && node app.js ",
-    "start": "concurrently \"npm run dev\" \"node app.js\"",
     "dist": "bash build.sh"
   },
   "dependencies": {
