@@ -38,6 +38,7 @@ let addExHeros = (heroObj) => {
  */
 let getAllHeros = (req, res) => {
     HeroModel.find({}, (err, herolist) => {
+      console.log(herolist, '--herolist--')
         if(err) {
             res.json({
                 data:'', status: err, errno: -1
